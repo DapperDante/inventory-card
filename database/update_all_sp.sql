@@ -1,0 +1,12 @@
+SOURCE ./sp/add_company.sql;
+SOURCE ./sp/add_inventory_card.sql;
+SOURCE ./sp/add_product.sql;
+SOURCE ./sp/add_user_to_company.sql;
+SOURCE ./sp/add_user.sql;
+SOURCE ./sp/authenticate_user.sql;
+SOURCE ./sp/delete_user_to_company.sql;
+SOURCE ./sp/get_companies.sql;
+SOURCE ./sp/get_company.sql;
+SOURCE ./sp/get_product.sql;
+SOURCE ./sp/get_user_by_email.sql;
+SOURCE ./sp/get_user_by_username.sql;
