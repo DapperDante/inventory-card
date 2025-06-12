@@ -1,0 +1,68 @@
+name: Run Jest Tests with MySQL
+
+on:
+  push:
+    branches:
+      - test
+  pull_request:
+    branches: test
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: mirromutth/mysql-action@v1.1
+        with:
+          host port: 3800 # Optional, default value is 3306. The port of host
+          container port: 3307 # Optional, default value is 3306. The port of container
+          character set server: "utf8" # Optional, default value is 'utf8mb4'. The '--character-set-server' option for mysqld
+          collation server: "utf8_general_ci" # Optional, default value is 'utf8mb4_general_ci'. The '--collation-server' option for mysqld
+          mysql version: "5.7" # Optional, default value is "latest". The version of the MySQL
+          mysql database: "testing" # Optional, default value is "test". The specified database which will be create
+          mysql root password: "passwordRoot" # Required if "mysql user" is empty, default is empty. The root superuser password
+
+      - name: Create a .env
+        run: |
+          cat <<EOF > .env
+          NODE_ENV=development
+          PORT=3000
+          CORS_ORIGIN=*
+          JWT_SECRET=this_is_a_secret_key
+          BCRYPT_SALT_ROUNDS=10
+          DB_HOST=127.0.0.1
+          DB_PORT=3800
+          DB_USER=root
+          DB_PASSWORD=passwordRoot
+          DB_NAME=testing
+          DB_DIALECT=mysql
+          EOF
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install mysql client
+        run: sudo apt-get update && sudo apt-get install -y mysql-client
+
+      - name: Wait for MySQL to be ready
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h127.0.0.1 -P3800 -ppasswordRoot --silent; then
+              break
+            fi
+            sleep 2
+          done
+
+      - name: Apply DB structure
+        run: |
+          mysql -h127.0.0.1 -P3800 -uroot -ppasswordRoot testing < demo/db/structure.demo.sql
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Jest tests
+        run: npm test

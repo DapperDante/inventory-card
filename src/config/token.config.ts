@@ -1,0 +1,1 @@
+export const tokenAccessLife = '1h';
