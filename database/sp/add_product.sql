@@ -1,7 +1,7 @@
 DROP PROCEDURE IF EXISTS add_product;
 
 DELIMITER //
-CREATE PROCEDURE add_product(in in_company_id INT, in in_name VARCHAR(50), in in_description VARCHAR(255))
+CREATE PROCEDURE add_product(IN in_user_id INT, IN in_company_id INT, IN in_name VARCHAR(50), IN in_description VARCHAR(255))
 BEGIN
   DECLARE message VARCHAR(100) DEFAULT 'Product added successfully';
   DECLARE error_code INT;
@@ -17,8 +17,8 @@ BEGIN
 
   START TRANSACTION;
 
-  INSERT INTO products(company_id, name, description)
-  VALUES(in_company_id, in_name, in_description);
+  INSERT INTO products(company_id, name, description, user_id)
+  VALUES(in_company_id, in_name, in_description, in_user_id);
 
   COMMIT;
 

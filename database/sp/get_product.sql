@@ -1,7 +1,7 @@
 DROP PROCEDURE IF EXISTS get_product;
 
 DELIMITER //
-CREATE PROCEDURE get_product(IN in_product_id INT)
+CREATE PROCEDURE get_product(IN in_company_id INT, IN in_product_id INT)
 BEGIN
   DECLARE message VARCHAR(100) DEFAULT 'Product retrieved';
   DECLARE error_code INT;

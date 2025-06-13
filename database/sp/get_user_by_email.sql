@@ -24,7 +24,6 @@ BEGIN
     JSON_OBJECT(
       'id', id,
       'username', username,
-      'email', email,
       'password', password
     ),
     auth_status

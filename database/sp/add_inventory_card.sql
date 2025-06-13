@@ -2,11 +2,13 @@ DROP PROCEDURE IF EXISTS add_inventory_card;
 
 DELIMITER //
 CREATE PROCEDURE add_inventory_card(
-  in in_product_id INT, 
-  in in_inventory_method_id INT,
-  in in_name VARCHAR(50), 
-  in in_description VARCHAR(255), 
-  in in_date DATETIME
+  IN in_user_id INT,
+  IN in_product_id INT, 
+  IN in_inventory_method_id INT,
+  IN in_currency_id INT,
+  IN in_name VARCHAR(50),
+  IN in_description VARCHAR(255), 
+  IN in_date DATETIME
 )
 BEGIN
   DECLARE message VARCHAR(100) DEFAULT 'Inventory card added';
@@ -25,20 +27,24 @@ BEGIN
 
   INSERT INTO inventory_cards(
     product_id, 
+    user_id,
     inventory_method_id, 
     name, 
     description, 
-    date
+    date,
+    currency_id
   )
   VALUES(
-    in_product_id, 
-    in_inventory_method_id, 
-    in_name, 
-    in_description, 
-    in_date
+    in_product_id,
+    in_user_id,
+    in_inventory_method_id,
+    in_name,
+    in_description,
+    in_date,
+    in_currency_id
   );
 
-  IF error_code IS NULL THEN 
+  IF error_code IS NULL THEN
     SET result_json = JSON_OBJECT(
       'id', LAST_INSERT_ID()
     ); 
