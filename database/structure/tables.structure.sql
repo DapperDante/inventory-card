@@ -69,15 +69,15 @@ CREATE TABLE inventory_movements(
   inventory_card_id INT NOT NULL,
   movement_concept_id INT NOT NULL,
   user_id INT NOT NULL,
+  related_movement_id INT DEFAULT NULL,
   date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   quantity INT NOT NULL,
-  stock INT NOT NULL,
-  unit_cost DECIMAL(14,2) NOT NULL,
-  final_balance DECIMAL(14,2) NOT NULL,
+  unit_cost DECIMAL(14,2),
   PRIMARY KEY(id),
   FOREIGN KEY(inventory_card_id) REFERENCES inventory_cards(id),
   FOREIGN KEY(movement_concept_id) REFERENCES movement_concepts(id),
-  FOREIGN KEY(user_id) REFERENCES users(id)
+  FOREIGN KEY(user_id) REFERENCES users(id),
+  FOREIGN KEY(related_movement_id) REFERENCES inventory_movements(id)
 );
 CREATE TABLE inventory_averages(
   id INT NOT NULL AUTO_INCREMENT,
@@ -86,10 +86,10 @@ CREATE TABLE inventory_averages(
   PRIMARY KEY(id),
   FOREIGN KEY(inventory_movement_id) REFERENCES inventory_movements(id)
 );
-CREATE TABLE inventory_references(
+CREATE TABLE movement_references(
   id INT NOT NULL AUTO_INCREMENT,
-  inventory_card_id INT NOT NULL,
+  inventory_movement_id INT NOT NULL,
   detail VARCHAR(50) NOT NULL,
   PRIMARY KEY(id),
-  FOREIGN KEY(inventory_card_id) REFERENCES inventory_cards(id)
+  FOREIGN KEY(inventory_movement_id) REFERENCES inventory_movements(id)
 );

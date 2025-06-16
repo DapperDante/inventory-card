@@ -14,13 +14,13 @@ BEGIN
   DECLARE result_json JSON;
   DECLARE new_id INT;
   
-  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
-  BEGIN 
-    SET message = 'An error occurred while adding the movement';
-    SET error_code = -1;
-    SET result_json = NULL;
-    ROLLBACK;
-  END;
+  -- DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+  -- BEGIN 
+  --   SET message = 'An error occurred while adding the movement';
+  --   SET error_code = -1;
+  --   SET result_json = NULL;
+  --   ROLLBACK;
+  -- END;
 
   START TRANSACTION;
 
@@ -29,6 +29,8 @@ BEGIN
       CALL purchase_product(in_user_id, in_inventory_card_id, in_quantity, in_unit_cost, new_id);
     WHEN in_concept_id = 4 THEN
       CALL add_initial_balance(in_user_id, in_inventory_card_id, in_quantity, in_unit_cost, new_id);
+    WHEN in_concept_id = 2 THEN
+      CALL sale_product(in_user_id, in_inventory_card_id, in_quantity, new_id);
     ELSE
       SIGNAL SQLSTATE '45000';
   END CASE;

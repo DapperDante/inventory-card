@@ -12,8 +12,6 @@ BEGIN
   DECLARE message VARCHAR(100) DEFAULT 'User product to company';
   DECLARE error_code INT;
   DECLARE result_json JSON;
-  DECLARE last_stock INT;
-  DECLARE last_final_balance DECIMAL(14,2);
   
   DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
   BEGIN 
@@ -25,32 +23,18 @@ BEGIN
 
   START TRANSACTION;
 
-  SELECT i_movements.stock, i_movements.final_balance
-  INTO last_stock, last_final_balance
-  FROM inventory_movements i_movements
-  WHERE i_movements.inventory_card_id = in_inventory_card_id 
-  ORDER BY i_movements.id DESC
-  LIMIT 1;
-  
-  SET last_stock = IFNULL(last_stock, 0) + in_quantity;
-  SET last_final_balance = IFNULL(last_final_balance, 0) + (in_quantity * in_unit_cost);
-
   INSERT INTO inventory_movements(
     inventory_card_id, 
-    movement_concept_id, 
+    movement_concept_id,
     user_id,
-    quantity, 
-    stock,
-    unit_cost,
-    final_balance
+    quantity,
+    unit_cost
   )VALUES(
     in_inventory_card_id, 
     1, 
     in_user_id,
-    in_quantity, 
-    last_stock,
-    in_unit_cost,
-    last_final_balance
+    in_quantity,
+    in_unit_cost
   );
   IF error_code IS NULL THEN
     SET out_new_id = LAST_INSERT_ID();

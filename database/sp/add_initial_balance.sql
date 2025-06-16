@@ -32,20 +32,16 @@ BEGIN
 
   INSERT INTO inventory_movements(
     inventory_card_id, 
-    movement_concept_id, 
+    movement_concept_id,
     user_id,
-    quantity, 
-    stock,
-    unit_cost,
-    final_balance
+    quantity,
+    unit_cost
   )VALUES(
     in_inventory_card_id, 
     4, 
     in_user_id,
     in_quantity,
-    in_quantity,
-    in_unit_cost,
-    in_quantity * in_unit_cost
+    in_unit_cost
   );
 
   IF already_exists = 1 THEN
