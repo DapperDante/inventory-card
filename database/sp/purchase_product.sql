@@ -5,8 +5,7 @@ CREATE PROCEDURE purchase_product(
   IN in_user_id INT, 
   IN in_inventory_card_id INT, 
   IN in_quantity INT, 
-  IN in_unit_cost DECIMAL(14,2),
-  OUT out_new_id INT
+  IN in_unit_cost DECIMAL(14,2)
 )
 BEGIN
   DECLARE message VARCHAR(100) DEFAULT 'User product to company';
@@ -37,7 +36,9 @@ BEGIN
     in_unit_cost
   );
   IF error_code IS NULL THEN
-    SET out_new_id = LAST_INSERT_ID();
+    SELECT JSON_OBJECT(
+      'id', LAST_INSERT_ID()
+    ) INTO result_json;
   END IF;
 
   COMMIT;

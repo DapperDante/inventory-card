@@ -4,5 +4,8 @@ INSERT INTO movement_concepts (
 ) VALUES
 ('Purchase', 'Purchase of products'),
 ('Sale', 'Sale of products'),
-('Return', 'Return of products'),
-('Initial Balance', 'Initial balance of products');
+('Purchase return', 'Return of purchased products'),  
+('Initial Balance', 'Initial balance of products'),
+('Sale return', 'Return of sold products'),
+('Production requirement', 'Products required for production'),
+('Production return', 'Return of products used in production');

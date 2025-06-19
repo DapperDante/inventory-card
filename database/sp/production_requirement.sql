@@ -1,13 +1,13 @@
-DROP PROCEDURE IF EXISTS sale_product;
+DROP PROCEDURE IF EXISTS production_requirement;
 
 DELIMITER //
-CREATE PROCEDURE sale_product(
-  IN in_user_id INT,
-  IN in_inventory_card_id INT,
+CREATE PROCEDURE production_requirement(
+  IN in_user_id INT, 
+  IN in_inventory_card_id INT, 
   IN in_quantity INT
 )
 BEGIN
-  DECLARE message VARCHAR(100) DEFAULT 'User product to company';
+  DECLARE message VARCHAR(100) DEFAULT 'Return added to the inventory card successfully';
   DECLARE error_code INT;
   DECLARE result_json JSON;
   DECLARE method_id INT;
@@ -15,7 +15,7 @@ BEGIN
   
   DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
   BEGIN
-    SET message = 'An error occurred while adding the sale product to the inventory card';
+    SET message = 'An error occurred while adding the purchase return to the inventory card';
     SET error_code = -1;
     SET result_json = NULL;
     ROLLBACK;
@@ -45,7 +45,7 @@ BEGIN
   )
   SELECT
     in_inventory_card_id,
-    2,
+    6,
     jt.id,
     in_user_id,
     jt.to_sell

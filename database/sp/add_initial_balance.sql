@@ -5,14 +5,12 @@ CREATE PROCEDURE add_initial_balance(
   IN in_user_id INT, 
   IN in_inventory_card_id INT, 
   IN in_quantity INT, 
-  IN in_unit_cost DECIMAL(14,2),
-  OUT out_new_id INT
+  IN in_unit_cost DECIMAL(14,2)
 )
 BEGIN
   DECLARE message VARCHAR(100) DEFAULT 'Initial balance added successfully';
   DECLARE error_code INT;
   DECLARE result_json JSON;
-  DECLARE already_exists INT DEFAULT 0;
   
   DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
   BEGIN 
@@ -23,12 +21,6 @@ BEGIN
   END;
 
   START TRANSACTION;
-
-  SELECT EXISTS (
-    SELECT 1 
-    FROM inventory_movements 
-    WHERE inventory_card_id = in_inventory_card_id
-  ) INTO already_exists;
 
   INSERT INTO inventory_movements(
     inventory_card_id, 
@@ -44,12 +36,11 @@ BEGIN
     in_unit_cost
   );
 
-  IF already_exists = 1 THEN
-    SIGNAL SQLSTATE '45000';
-  END IF;
-
   IF error_code IS NULL THEN
-    SET out_new_id = LAST_INSERT_ID();
+    SELECT JSON_OBJECT(
+      'id', LAST_INSERT_ID()
+    )
+    INTO result_json;
   END IF;
 
   COMMIT;

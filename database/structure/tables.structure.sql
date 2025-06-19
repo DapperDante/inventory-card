@@ -72,7 +72,7 @@ CREATE TABLE inventory_movements(
   related_movement_id INT DEFAULT NULL,
   date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   quantity INT NOT NULL,
-  unit_cost DECIMAL(14,2),
+  unit_cost DECIMAL(20,4),
   PRIMARY KEY(id),
   FOREIGN KEY(inventory_card_id) REFERENCES inventory_cards(id),
   FOREIGN KEY(movement_concept_id) REFERENCES movement_concepts(id),

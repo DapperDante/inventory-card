@@ -30,7 +30,8 @@ BEGIN
   ) INTO inventory_cards_json
   FROM inventory_cards i_cards
   JOIN inventory_methods ON inventory_methods.id = i_cards.inventory_method_id
-  WHERE i_cards.product_id = in_product_id;
+  WHERE i_cards.product_id = in_product_id
+  ORDER BY i_cards.id ASC;
 
   -- Main product query
   SELECT JSON_OBJECT(

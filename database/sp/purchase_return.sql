@@ -4,15 +4,14 @@ DELIMITER //
 CREATE PROCEDURE purchase_return(
   IN in_user_id INT, 
   IN in_inventory_card_id INT, 
-  IN in_quantity INT,
-  OUT out_new_id INT
+  IN in_quantity INT
 )
 BEGIN
   DECLARE message VARCHAR(100) DEFAULT 'Return added to the inventory card successfully';
   DECLARE error_code INT;
   DECLARE result_json JSON;
-  DECLARE last_stock INT;
-  DECLARE last_final_balance DECIMAL(14,2);
+  DECLARE method_id INT;
+  DECLARE movement_source JSON;
   
   DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
   BEGIN
@@ -24,35 +23,44 @@ BEGIN
 
   START TRANSACTION;
 
-  SELECT i_movements.stock, i_movements.final_balance
-  INTO last_stock, last_final_balance
-  FROM inventory_movements i_movements
-  WHERE i_movements.inventory_card_id = in_inventory_card_id 
-  ORDER BY i_movements.id DESC
-  LIMIT 1; b
-  
-  SET last_stock = IFNULL(last_stock, 0) + in_quantity;
-  SET last_final_balance = IFNULL(last_final_balance, 0) + (in_quantity * in_unit_cost);
+  SELECT inventory_method_id
+  INTO method_id
+  FROM inventory_cards
+  WHERE id = in_inventory_card_id;
+
+  IF method_id = 1 THEN
+    -- FIFO Method
+    CALL find_purchase_for_sale_fifo(in_inventory_card_id, in_quantity, movement_source);
+  ELSEIF method_id = 2 THEN
+    -- LIFO Method
+    CALL find_purchase_for_sale_lifo(in_inventory_card_id, in_quantity, movement_source);
+  END IF;
 
   INSERT INTO inventory_movements(
     inventory_card_id, 
-    movement_concept_id, 
+    movement_concept_id,
+    related_movement_id,
     user_id,
-    quantity, 
-    stock,
-    unit_cost,
-    final_balance
-  )VALUES(
-    in_inventory_card_id, 
-    1, 
+    quantity
+  )
+  SELECT
+    in_inventory_card_id,
+    3,
+    jt.id,
     in_user_id,
-    in_quantity, 
-    last_stock,
-    in_unit_cost,
-    last_final_balance
-  );
+    jt.to_sell
+  FROM JSON_TABLE(
+    movement_source,
+    '$[*]' COLUMNS (
+      id INT PATH '$.id',
+      to_sell INT PATH '$.to_sell'
+    )
+  ) AS jt;
+
   IF error_code IS NULL THEN
-    SET out_new_id = LAST_INSERT_ID();
+    SELECT JSON_OBJECT(
+      'id', LAST_INSERT_ID()
+    ) INTO result_json;
   END IF;
 
   COMMIT;
