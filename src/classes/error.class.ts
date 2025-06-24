@@ -1,8 +1,6 @@
 export class ErrorFactory {
 	static createError(type: string, message: string) {
 		switch (type) {
-			case "InvalidationFieldsError":
-				return new InvalidationFieldsError(message);
 			case "PermissionDeniedError":
 				return new PermissionDeniedError(message);
 			case "NotFoundError":
@@ -14,12 +12,6 @@ export class ErrorFactory {
 			default:
 				return new Error(`Unknown error type: ${type}`);
 		}
-	}
-}
-export class InvalidationFieldsError extends Error {
-	constructor(message: any) {
-		super(message);
-		this.name = "ValidationError";
 	}
 }
 export class PermissionDeniedError extends Error {

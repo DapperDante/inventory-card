@@ -1,9 +1,12 @@
 import { QueryTypes } from "sequelize";
 import database from "../db/connection";
 import { CRUD } from "../interfaces/crud.interface";
+import { Service } from "typedi";
+
 // Each method returns JSON, therefore QueryTypes.SELECT is used.
+@Service()
 export class UserRepository implements CRUD {
-	create(data: any): Promise<any> {
+	async create(data: any): Promise<any> {
 		return database.query('CALL add_user(:username, :email, :password)', {
 			replacements: {
 				username: data.username,
@@ -13,16 +16,16 @@ export class UserRepository implements CRUD {
 			type: QueryTypes.SELECT
 		});
 	}
-	find(id: number): Promise<any> {
+	async find(data: any): Promise<any> {
 		return database.query('CALL get_user(:id)', {
-			replacements: { id },
+			replacements: { id: data.id },
 			type: QueryTypes.SELECT
 		});
 	}
-	update(user: any, data: any): Promise<any> {
+	async update(data: any): Promise<any> {
 		return database.query('CALL update_user(:id, :username, :email, :password)', {
 			replacements: {
-				id: user.id,
+				id: data.id,
 				username: data.username,
 				email: data.email,
 				password: data.password
@@ -30,22 +33,28 @@ export class UserRepository implements CRUD {
 			type: QueryTypes.SELECT
 		});
 	}
-	delete(user: any): Promise<any> {
+	async delete(data: any): Promise<any> {
 		return database.query('CALL delete_user(:id)', {
-			replacements: { id: user.id },
+			replacements: { id: data.id },
 			type: QueryTypes.SELECT
 		});
 	}
-	findByEmail(email: string): Promise<any> {
+	async findByEmail(email: string): Promise<any> {
 		return database.query('CALL get_user_by_email(:email)', {
 			replacements: { email },
 			type: QueryTypes.SELECT
 		});
 	}
-	findByUsername(username: string): Promise<any> {
+	async findByUsername(username: string): Promise<any> {
 		return database.query('CALL get_user_by_username(:username)', {
 			replacements: { username },
 			type: QueryTypes.SELECT
 		});
+	}
+	async authUser(id: number):Promise<any>{
+		return database.query('CALL authenticate_user(:id)',	 {
+			replacements: {id},
+			type: QueryTypes.SELECT
+		})
 	}
 }

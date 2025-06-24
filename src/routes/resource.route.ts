@@ -12,4 +12,8 @@ resourceRoutes.get('/currency', [
   applyRole("admin")
 ], getCurrencies);
 
+resourceRoutes.get("/movement", [
+  applyRole("admin")
+], getMethods);
+
 export default resourceRoutes;

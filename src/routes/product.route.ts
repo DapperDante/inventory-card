@@ -3,12 +3,13 @@ import { accessProduct, addProduct, deleteProduct, getProduct, getProducts, upda
 import { applyRole } from "../middlewares/role.middleware";
 import { validateFields } from "../middlewares/validateFields.middleware";
 import { validateTokenFields } from "../middlewares/tokenFields.middleware";
+import { ProductFields } from "../classes/fields.class";
 
 const productRoutes = Router();
 
 productRoutes.post("/", [
   applyRole("admin"), 
-  validateFields("name", "description"), 
+  validateFields(ProductFields.create), 
   validateTokenFields("company_id")
 ], addProduct);
 
@@ -23,16 +24,16 @@ productRoutes.post("/:id", [
   validateTokenFields("company_id")
 ], accessProduct);
 
-productRoutes.put("/", [
-  applyRole("admin"), 
-  validateTokenFields("company_id", "product_id"), 
-  validateFields("name", "description")
-], updateProduct);
+// productRoutes.put("/", [
+//   applyRole("admin"), 
+//   validateTokenFields("company_id", "product_id"), 
+//   validateFields("name", "description")
+// ], updateProduct);
 
-productRoutes.delete("/", [
-  applyRole("admin"), 
-  validateTokenFields("company_id", "product_id")
-], deleteProduct);
+// productRoutes.delete("/", [
+//   applyRole("admin"), 
+//   validateTokenFields("company_id", "product_id")
+// ], deleteProduct);
 
 productRoutes.get("/all", [
   applyRole("user", "admin"), 

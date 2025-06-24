@@ -11,6 +11,14 @@ BEGIN
   DECLARE result_json JSON;
   DECLARE movements_json JSON;
   
+  DECLARE CONTINUE HANDLER FOR NOT FOUND
+  BEGIN
+    SET message = 'Inventory card not found';
+    SET error_code = 1329;
+    SET result_json = NULL;
+    ROLLBACK;
+  END;
+
   DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
   BEGIN
     SET message = 'An error occurred while retrieving the inventory card';

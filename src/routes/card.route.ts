@@ -3,12 +3,13 @@ import { applyRole } from '../middlewares/role.middleware';
 import { validateFields } from '../middlewares/validateFields.middleware';
 import { accessCard, addCard, getCard, getCards } from '../controllers/card.controller';
 import { validateTokenFields } from '../middlewares/tokenFields.middleware';
+import { CardFields } from '../classes/fields.class';
 
 const cardRoutes = Router();
 
 cardRoutes.post('/', [
   applyRole('admin'), 
-  validateFields('method_id', 'currency_id', 'name', 'description', 'date')
+  validateFields(CardFields.create),
 ], addCard);
 
 cardRoutes.post('/:id', [

@@ -1,7 +1,9 @@
 import { QueryTypes } from "sequelize";
 import database from "../db/connection";
 import { CRUD } from "../interfaces/crud.interface";
+import { Service } from "typedi";
 
+@Service()
 export class CompanyRepository implements CRUD {
 	create(data: any): Promise<any> {
 		return database.query("CALL add_company(:user_id, :name)", {

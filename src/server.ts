@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import app from "./app";
 import { appEnv } from "./config/env.config";
 import database from "./db/connection";

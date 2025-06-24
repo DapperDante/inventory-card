@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken';
 import { appEnv } from '../config/env.config';
-import { AdminToken, GuestToken, TokenFactory, UserToken } from '../classes/token.class';
+import { AdminToken, AuthToken, GuestToken, TokenFactory, UserToken } from '../classes/token.class';
+import { RoleType } from '../interfaces/role.interface';
 
-export const createTokenFactory = (role: string, extra?: any) => {
+export const createTokenFactory = (role: RoleType, extra?: any) => {
   let factory: TokenFactory;
   switch(role) {
     case 'user':
@@ -13,6 +14,9 @@ export const createTokenFactory = (role: string, extra?: any) => {
       break;
     case 'guest':
       factory = new GuestToken();
+      break;
+    case 'auth': 
+      factory = new AuthToken();
       break;
     default:
       throw new Error('Invalid role specified');

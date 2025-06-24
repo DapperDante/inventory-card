@@ -1,7 +1,8 @@
 import { UniqueConstraintError, ValidationError } from "sequelize";
-import { PermissionDeniedError, InvalidationFieldsError, NotFoundError, SpError } from "../classes/error.class";
+import { PermissionDeniedError, NotFoundError, SpError } from "../classes/error.class";
 import { RouteError } from "../interfaces/route.interface";
 import { TokenExpiredError } from "jsonwebtoken";
+import { ZodError } from "zod";
 
 const handleTokenExpiredError: RouteError = (err, req, res, next) => {
 	console.log(err);
@@ -31,9 +32,9 @@ const handleSyntaxError: RouteError = (err, req, res, next) => {
 };
 
 const handleInvalidationFieldsError: RouteError = (err, req, res, next) => {
-	if (err instanceof InvalidationFieldsError) {
+	if (err instanceof ZodError) {
 		return res.status(400).json({
-			message: err.message || "Bad Request: Invalid JSON",
+			message: "Bad Request: Invalid JSON",
 		});
 	}
 	next(err);

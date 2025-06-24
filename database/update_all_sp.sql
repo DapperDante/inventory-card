@@ -16,6 +16,7 @@ SOURCE ./sp/get_companies.sql;
 SOURCE ./sp/get_company.sql;
 SOURCE ./sp/get_inventory_card.sql;
 SOURCE ./sp/get_inventory_cards.sql;
+SOURCE ./sp/get_movements.sql;
 SOURCE ./sp/get_product.sql;
 SOURCE ./sp/get_products.sql;
 SOURCE ./sp/get_balance.sql;

@@ -1,41 +1,37 @@
-import { ErrorFactory } from "../classes/error.class";
+import { Container } from "typedi";
 import { RouteHandler } from "../interfaces/route.interface";
-import { UserRepository } from "../repositories/user.repository";
-import { hashPassword, verifyPassword } from "../security/encryptation.security";
-import { createTokenFactory } from "../security/token.security";
-
-const User = new UserRepository();
+import { UserService } from "../services/user.service";
 
 export const signup: RouteHandler = async (req, res, next) => {
 	try {
-		const { username, email, password } = req.body;
-		const hashedPassword = await hashPassword(password);
-		const [query] = await User.create({ username, email, password: hashedPassword });
-		const { response } = query[0];
-		if(response.error_code)
-			throw ErrorFactory.createError("SpError", "User already exists");
-		const token = createTokenFactory("admin", { user_id: response.id });
-		const payload = {
-			token,
-		};
+		const service = Container.get(UserService);
+		const { username, email, password } = req.data;
+		const payload = await service.signup(username, email, password);
 		res.status(201).json(payload);
 	} catch (error) {
 		next(error);
 	}
 };
+
 export const login: RouteHandler = async (req, res, next) => {
 	try {
-		const { username, password } = req.body;
-		const [query] = await User.findByUsername(username);
-		const { response } = query[0];
-		if (!response.result)
-			throw ErrorFactory.createError("NotFoundError", "User not found");
-		const isValid = await verifyPassword(password, response.result.password);
-		if (!isValid) throw ErrorFactory.createError("PermissionDeniedError", "Invalid password");
-		const token = createTokenFactory("admin", { user_id: response.result.id });
-		const payload = {
-			token
-		};
+		const service = Container.get(UserService);
+		const { username, password } = req.data;
+		const payload = await service.loginUser(username, password);
+		if(!payload.auth)
+			res.status(202).json(payload);
+		else
+			res.status(200).json(payload);
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const auth: RouteHandler = async (req, res, next) => {
+	try {
+		const service = Container.get(UserService);
+		const { user_id } = req.user;
+		const payload = await service.auth(user_id);
 		res.status(200).json(payload);
 	} catch (error) {
 		next(error);

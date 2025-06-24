@@ -1,14 +1,14 @@
 import { Response, NextFunction } from "express";
-import { RequestWithUser } from "./request.interface";
+import { RequestWithExtensions } from "./request.interface";
 
 export interface RouteHandler {
-  (req: RequestWithUser, res: Response, next: NextFunction): any;
+  (req: RequestWithExtensions, res: Response, next: NextFunction): any;
 }
 
 export interface RouteSimple {
-  (req: RequestWithUser, res: Response): any;
+  (req: RequestWithExtensions, res: Response): any;
 }
 
 export interface RouteError {
-  (err: any, req: RequestWithUser, res: Response, next: NextFunction): any;
+  (err: any, req: RequestWithExtensions, res: Response, next: NextFunction): any;
 }

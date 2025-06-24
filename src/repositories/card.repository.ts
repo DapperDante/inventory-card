@@ -1,7 +1,8 @@
 import { QueryTypes } from 'sequelize';
 import database from '../db/connection';
 import { CRUD } from '../interfaces/crud.interface';
-
+import { Service } from 'typedi';
+@Service()
 export class CardRepository implements CRUD {
 	create(data: any): Promise<any[]> {
 		return database.query(
