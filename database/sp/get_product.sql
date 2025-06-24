@@ -8,6 +8,12 @@ BEGIN
   DECLARE result_json JSON;
   DECLARE inventory_cards_json JSON;
   
+  DECLARE CONTINUE HANDLER FOR NOT FOUND
+  BEGIN
+    SET message = 'Product not found';
+    SET error_code = 1329;
+  END;
+
   DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
   BEGIN
     SET message = 'An error occurred while retrieving the product';
@@ -36,10 +42,13 @@ BEGIN
   -- Main product query
   SELECT JSON_OBJECT(
     'product_name', products.name,
+    'created_by', users.username,
+    'description', products.description,
     'inventory_cards', inventory_cards_json
   )
   INTO result_json
   FROM products
+  JOIN users ON users.id = products.user_id
   WHERE products.id = in_product_id;
 
   COMMIT;

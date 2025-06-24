@@ -82,7 +82,7 @@ CREATE TABLE inventory_movements(
 CREATE TABLE inventory_averages(
   id INT NOT NULL AUTO_INCREMENT,
   inventory_movement_id INT NOT NULL,
-  average_cost DECIMAL(14,2) NOT NULL,
+  average_cost DECIMAL(20,4) NOT NULL,
   PRIMARY KEY(id),
   FOREIGN KEY(inventory_movement_id) REFERENCES inventory_movements(id)
 );

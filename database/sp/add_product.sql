@@ -19,7 +19,7 @@ BEGIN
 
   INSERT INTO products(company_id, name, description, user_id)
   VALUES(in_company_id, in_name, in_description, in_user_id);
-
+  
   COMMIT;
 
   SELECT JSON_OBJECT(

@@ -1,5 +1,5 @@
 export class ErrorFactory {
-	static createError(type: any, message: string) {
+	static createError(type: string, message: string) {
 		switch (type) {
 			case "InvalidationFieldsError":
 				return new InvalidationFieldsError(message);
@@ -9,12 +9,13 @@ export class ErrorFactory {
 				return new NotFoundError(message);
 			case "ViolationSystemError":
 				return new ViolationSystemError(message);
+			case "SpError":
+				return new SpError(message);
 			default:
 				return new Error(`Unknown error type: ${type}`);
 		}
 	}
 }
-
 export class InvalidationFieldsError extends Error {
 	constructor(message: any) {
 		super(message);
@@ -37,5 +38,11 @@ export class ViolationSystemError extends Error {
 	constructor(message: any) {
 		super(message);
 		this.name = "ViolationSystemError";
+	}
+}
+export class SpError extends Error {
+	constructor(message: any) {
+		super(message);
+		this.name = "SpError";
 	}
 }

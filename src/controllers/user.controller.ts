@@ -10,8 +10,11 @@ export const signup: RouteHandler = async (req, res, next) => {
 	try {
 		const { username, email, password } = req.body;
 		const hashedPassword = await hashPassword(password);
-		const newUser = await User.create({ username, email, password: hashedPassword });
-		const token = createTokenFactory("admin", { user_id: newUser.dataValues.id });
+		const [query] = await User.create({ username, email, password: hashedPassword });
+		const { response } = query[0];
+		if(response.error_code)
+			throw ErrorFactory.createError("SpError", "User already exists");
+		const token = createTokenFactory("admin", { user_id: response.id });
 		const payload = {
 			token,
 		};
@@ -23,15 +26,15 @@ export const signup: RouteHandler = async (req, res, next) => {
 export const login: RouteHandler = async (req, res, next) => {
 	try {
 		const { username, password } = req.body;
-		const user = await User.findByUsername(username);
-		if (!user) 
+		const [query] = await User.findByUsername(username);
+		const { response } = query[0];
+		if (!response.result)
 			throw ErrorFactory.createError("NotFoundError", "User not found");
-		const isValid = await verifyPassword(password, user.dataValues.password);
-		if (!isValid) 
-			throw ErrorFactory.createError("PermissionDeniedError", "Invalid password");
-		const token = createTokenFactory("admin", {user_id: user.dataValues.id});
+		const isValid = await verifyPassword(password, response.result.password);
+		if (!isValid) throw ErrorFactory.createError("PermissionDeniedError", "Invalid password");
+		const token = createTokenFactory("admin", { user_id: response.result.id });
 		const payload = {
-			token,
+			token
 		};
 		res.status(200).json(payload);
 	} catch (error) {
