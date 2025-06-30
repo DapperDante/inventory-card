@@ -5,6 +5,7 @@ import { Service } from 'typedi';
 @Service()
 export class CardRepository implements CRUD {
 	create(data: any): Promise<any[]> {
+		console.log('Creating inventory card with data:', data);
 		return database.query(
 			'CALL add_inventory_card(:user_id, :product_id, :method_id, :currency_id, :name, :description, :date)',
 			{

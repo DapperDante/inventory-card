@@ -7,7 +7,7 @@ CREATE PROCEDURE sale_product(
   IN in_quantity INT
 )
 BEGIN
-  DECLARE message VARCHAR(100) DEFAULT 'User product to company';
+  DECLARE message VARCHAR(100) DEFAULT 'Sale product added to the inventory card successfully';
   DECLARE error_code INT;
   DECLARE result_json JSON;
   DECLARE method_id INT;
@@ -27,12 +27,11 @@ BEGIN
   INTO method_id
   FROM inventory_cards
   WHERE id = in_inventory_card_id;
-
+  
+  -- Get the ids of the movements that will be used for the sale
   IF method_id = 1 THEN
-    -- FIFO Method
     CALL find_purchase_for_sale_fifo(in_inventory_card_id, in_quantity, movement_source);
   ELSEIF method_id = 2 THEN
-    -- LIFO Method
     CALL find_purchase_for_sale_lifo(in_inventory_card_id, in_quantity, movement_source);
   END IF;
 
@@ -57,10 +56,8 @@ BEGIN
     )
   ) AS jt;
 
-  IF error_code IS NULL THEN
-    SELECT JSON_OBJECT(
-      'id', LAST_INSERT_ID()
-    ) INTO result_json;
+  IF movement_source IS NULL THEN
+    SIGNAL SQLSTATE '45000';
   END IF;
 
   COMMIT;

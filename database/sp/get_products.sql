@@ -19,9 +19,9 @@ BEGIN
   START TRANSACTION;
 
   -- Main product query
-  SELECT JSON_ARRAY(
+  SELECT JSON_ARRAYAGG(
     JSON_OBJECT(
-      'id', id,
+      'product_id', id,
       'product_name', name
     )
   )

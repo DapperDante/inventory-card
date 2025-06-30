@@ -73,7 +73,7 @@ export class CardService {
       throw ErrorFactory.createError("SpError", response.message);
     }
     return {
-      card: response.result
+      result: response.result
     };
   }
   async getCards(product_id: number): Promise<any>{
@@ -83,7 +83,7 @@ export class CardService {
       throw ErrorFactory.createError("SpError", response.message);
     }
     return {
-      cards: response.result
+      result: response.result
     };
   }
 }

@@ -26,7 +26,7 @@ jobs:
 
       - name: Create a .env
         run: |
-          cat <<EOF > .env
+          cat <<EOF > /api/.env
           NODE_ENV=development
           PORT=3000
           CORS_ORIGIN=*

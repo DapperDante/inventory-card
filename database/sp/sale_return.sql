@@ -7,7 +7,7 @@ CREATE PROCEDURE sale_return(
   IN in_quantity INT
 )
 BEGIN
-  DECLARE message VARCHAR(100) DEFAULT 'Return added to the inventory card successfully';
+  DECLARE message VARCHAR(100) DEFAULT 'Sale return added to the inventory card successfully';
   DECLARE error_code INT;
   DECLARE result_json JSON;
   DECLARE method_id INT;
@@ -15,7 +15,7 @@ BEGIN
   
   DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
   BEGIN
-    SET message = 'An error occurred while adding the purchase return to the inventory card';
+    SET message = 'An error occurred while adding the sale return to the inventory card';
     SET error_code = -1;
     SET result_json = NULL;
     ROLLBACK;
@@ -29,10 +29,8 @@ BEGIN
   WHERE id = in_inventory_card_id;
 
   IF method_id = 1 THEN
-    -- FIFO Method
     CALL find_sale_for_return_fifo(in_inventory_card_id, in_quantity, movement_source);
   ELSEIF method_id = 2 THEN
-    -- LIFO Method
     CALL find_sale_for_return_lifo(in_inventory_card_id, in_quantity, movement_source);
   END IF;
 
@@ -57,10 +55,8 @@ BEGIN
     )
   ) AS jt;
 
-  IF error_code IS NULL THEN
-    SELECT JSON_OBJECT(
-      'id', LAST_INSERT_ID()
-    ) INTO result_json;
+  IF movement_source IS NULL THEN
+    SIGNAL SQLSTATE '45000';
   END IF;
 
   COMMIT;

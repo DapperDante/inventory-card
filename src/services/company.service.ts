@@ -40,17 +40,15 @@ export class CompanyService {
 		const { response } = query[0];
 		if(response.error_code)
 			throw ErrorFactory.createError("SpError", response.message);
-		return {
-			company: response.result
-		}
+		return response.result;
   }
-  async getCompanies(user_id: number): Promise<{companies: any}>{
+  async getCompanies(user_id: number): Promise<{result: any}>{
     const [query] = await this.companyRepository.findAllByUserId(user_id);
 		const { response } = query[0];
 		if (response.error_code)
 			throw ErrorFactory.createError("SpError", response.message);
 		return {
-			companies : response.result
+			result : response.result
 		};
   }
 }

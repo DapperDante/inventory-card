@@ -1,5 +1,5 @@
 import Container from "typedi";
-import { RouteHandler } from "../interfaces/route.interface.js";
+import { RouteHandler } from "../interfaces/route.interface";
 import { ProductService } from "../services/product.service";
 
 export const addProduct: RouteHandler = async (req, res, next) => {

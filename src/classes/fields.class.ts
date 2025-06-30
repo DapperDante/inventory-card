@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { date, z } from 'zod';
 
 export class UserFields{
   static signup = z.object({
@@ -27,11 +27,11 @@ export class ProductFields{
 
 export class CardFields{
   static create = z.object({
-    inventory_method_id: z.number().min(1, "Inventory method ID must be a positive integer"),
+    method_id: z.number().min(1, "Inventory method ID must be a positive integer"),
     currency_id: z.number().min(1, "Currency ID must be a positive integer"),
     name: z.string().min(3, "Card name must be at least 3 characters long"),
     description: z.string().min(10, "Description must be at least 10 characters long"),
-    date: z.date()
+    date: z.string().transform((str) => new Date(str)).pipe(z.date())
   })
 }
 

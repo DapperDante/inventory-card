@@ -37,7 +37,7 @@ BEGIN
       'stock', i_movements.stock,
       'unit_cost', i_movements.unit_cost,
       'final_balance', i_movements.final_balance,
-      'user_id', i_movements.created_by
+      'created_by', i_movements.created_by
     )
   )
   INTO movements_json

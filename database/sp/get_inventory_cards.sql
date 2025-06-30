@@ -20,7 +20,7 @@ BEGIN
   START TRANSACTION;
 
   -- Main query
-  SELECT JSON_ARRAY(
+  SELECT JSON_ARRAYAGG(
     JSON_OBJECT(
     'id', i_cards.id,
     'product', products.name,

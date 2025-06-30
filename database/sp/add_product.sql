@@ -20,6 +20,12 @@ BEGIN
   INSERT INTO products(company_id, name, description, user_id)
   VALUES(in_company_id, in_name, in_description, in_user_id);
   
+  IF error_code IS NULL THEN
+    SELECT JSON_OBJECT(
+      'id', LAST_INSERT_ID()
+    ) INTO result_json;
+  END IF;
+  
   COMMIT;
 
   SELECT JSON_OBJECT(

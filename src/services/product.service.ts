@@ -53,9 +53,7 @@ export class ProductService {
     if (response.error_code) {
         throw ErrorFactory.createError("SpError", response.message);
     }
-    return {
-      product: response.result
-    }
+    return response.result;
 	}
   async getProducts(company_id: number): Promise<any>{
     const [query] = await this.productRepository.findAllByCompanyId(company_id);
@@ -64,7 +62,7 @@ export class ProductService {
       throw ErrorFactory.createError("SpError", response.message);
     }
     return {
-      products: response.result
+      result: response.result
     }
   }
 }

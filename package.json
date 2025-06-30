@@ -1,7 +1,7 @@
 {
   "name": "server-boilerplate-ts",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "test": "jest",
     "build": "tsc",

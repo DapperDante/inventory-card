@@ -7,5 +7,5 @@ INSERT INTO movement_concepts (
 ('Purchase return', 'Return of purchased products'),  
 ('Initial Balance', 'Initial balance of products'),
 ('Sale return', 'Return of sold products'),
-('Production requirement', 'Products required for production'),
+('Production required', 'Products required for production'),
 ('Production return', 'Return of products used in production');

@@ -22,7 +22,7 @@ SOURCE ./sp/get_products.sql;
 SOURCE ./sp/get_balance.sql;
 SOURCE ./sp/get_user_by_email.sql;
 SOURCE ./sp/get_user_by_username.sql;
-SOURCE ./sp/production_requirement.sql;
+SOURCE ./sp/production_required.sql;
 SOURCE ./sp/production_return.sql;
 SOURCE ./sp/purchase_product.sql;
 SOURCE ./sp/purchase_return.sql;

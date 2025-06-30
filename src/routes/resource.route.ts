@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { applyRole } from "../middlewares/role.middleware";
-import { getCurrencies, getMethods } from "../controllers/resource.controller";
+import { getConcepts, getCurrencies, getMethods } from "../controllers/resource.controller";
 
 const resourceRoutes = Router();
 
@@ -12,8 +12,8 @@ resourceRoutes.get('/currency', [
   applyRole("admin")
 ], getCurrencies);
 
-resourceRoutes.get("/movement", [
+resourceRoutes.get("/concept", [
   applyRole("admin")
-], getMethods);
+], getConcepts);
 
 export default resourceRoutes;
