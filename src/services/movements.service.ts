@@ -117,4 +117,14 @@ export class MovementService {
 			result: response.result,
 		};
 	}
+	async getBalance(card_id: number): Promise<any> {
+		const [query] = await this.movementRepository.getBalance({ card_id });
+		const { response } = query[0];
+		if (response.error_code) {
+			throw ErrorFactory.createError("SpError", response.message);
+		}
+		return {
+			result: response.result,
+		};
+	}
 }

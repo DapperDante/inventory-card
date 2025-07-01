@@ -84,4 +84,12 @@ export class MovementRepository{
       type: QueryTypes.SELECT
     });
   }
+  getBalance(data: any): Promise<any>{
+    return database.query('CALL get_balance(:card_id)', {
+      replacements: {
+        card_id: data.card_id
+      },
+      type: QueryTypes.SELECT
+    });
+  }
 }

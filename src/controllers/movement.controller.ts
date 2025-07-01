@@ -89,3 +89,13 @@ export const getMovements: RouteHandler = async (req, res, next) => {
 		next(error);
 	}
 };
+export const getBalance: RouteHandler = async (req, res, next) => {
+	try {
+		const service = Container.get(MovementService);
+		const { card_id } = req.user;
+		const payload = await service.getBalance(card_id);
+		res.status(200).json(payload);
+	} catch (error) {
+		next(error);
+	}
+}

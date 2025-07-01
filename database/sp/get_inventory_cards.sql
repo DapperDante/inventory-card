@@ -33,12 +33,11 @@ BEGIN
   )
   INTO result_json
   FROM inventory_cards i_cards
-  JOIN inventory_methods i_methods ON i_methods.id = i_cards.inventory_method_id
-  JOIN currencies ON currencies.id = i_cards.currency_id
-  JOIN users ON users.id = i_cards.user_id
-  JOIN products ON products.id = i_cards.product_id
-  JOIN companies ON companies.id = products.company_id
-  JOIN users_companies u_companies ON companies.id = u_companies.company_id
+  LEFT JOIN inventory_methods i_methods ON i_methods.id = i_cards.inventory_method_id
+  LEFT JOIN currencies ON currencies.id = i_cards.currency_id
+  LEFT JOIN users ON users.id = i_cards.user_id
+  LEFT JOIN products ON products.id = i_cards.product_id
+  LEFT JOIN companies ON companies.id = products.company_id
   WHERE i_cards.product_id = in_product_id;
 
   COMMIT;
