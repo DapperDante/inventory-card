@@ -1,7 +1,6 @@
 import request from "supertest";
 import app from "../app";
 import { faker } from "@faker-js/faker";
-import { User } from "../models/relation";
 import { afterAll, beforeAll, describe, expect, it } from "@jest/globals";
 
 describe("User API", () => {
