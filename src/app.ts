@@ -7,6 +7,10 @@ import userRoutes from './routes/user.route';
 import productRoutes from './routes/product.route';
 import healthRoutes from './routes/health.route';
 import { errorHandler } from './middlewares/error.middleware';
+import companyRoutes from './routes/company.route';
+import cardRoutes from './routes/card.route';
+import movementRoutes from './routes/movement.route';
+import resourceRoutes from './routes/resource.route';
 
 const app = express();
 
@@ -20,7 +24,11 @@ app.use(compression());
 app.use("/", mainRoutes);
 app.use("/health", healthRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/company", companyRoutes);
 app.use("/api/product", productRoutes);
+app.use("/api/card", cardRoutes);
+app.use("/api/movement", movementRoutes);
+app.use("/api/resource", resourceRoutes);
 app.use(errorHandler);
 
 export default app;

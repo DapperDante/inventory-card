@@ -1,13 +1,14 @@
-import { ErrorFactory } from "../classes/error.class";
 import { RouteHandler } from "../interfaces/route.interface";
+import { ZodSchema } from "zod";
 
-export const validateFields = (...fields: string[]): RouteHandler => {
+export const validateFields = (schema: ZodSchema): RouteHandler => {
   return (req, res, next) => {
-    if(!req.body)
-      next(ErrorFactory.createError("InvalidationFieldsError", "Request body is required"));
-    const missing = fields.filter(field => !req.body[field]);
-    if (missing.length > 0)
-      next(ErrorFactory.createError("InvalidationFieldsError", `Missing required fields: ${missing.join(", ")}`));
-    next();
+    try{
+      const validatedData = schema.parse(req.body);
+      req.data = validatedData;
+      next();
+    }catch(error){
+      return next(error);
+    }
   };
 };

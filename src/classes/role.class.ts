@@ -9,53 +9,33 @@ export class RoleFactory {
 				return new User();
 			case "guest":
 				return new Guest();
+			case "auth":
+				return new Auth();
 			default:
 				throw new Error(`Role type ${roleType} is not recognized.`);
 		}
 	}
 }
 
-export class Admin implements Role {
-	private permissions: string[];
-	private name: string;
+export class Admin extends Role {
 	constructor() {
-		this.permissions = ["read", "write", "delete", "update"];
-		this.name = "Admin";
-	}
-	getPermissions(): string[] {
-		return this.permissions;
-	}
-	isSameRole(role: string): boolean {
-		return role === this.name;
+		super(["read", "write", "delete", "update"], "admin");
 	}
 }
 
-export class User implements Role {
-	private permissions: string[];
-	private name: string;
+export class User extends Role {
 	constructor() {
-		this.permissions = ["read", "write", "delete", "update"];
-		this.name = "User";
-	}
-	getPermissions(): string[] {
-		return this.permissions;
-	}
-	isSameRole(role: string): boolean {
-		return role === this.name;
+		super(["read", "write", "delete", "update"], "user");
 	}
 }
 
-export class Guest implements Role {
-	private permissions: string[];
-	private name: string;
+export class Guest extends Role {
 	constructor() {
-		this.permissions = ["read"];
-		this.name = "Guest";
+		super(["read"], "guest");
 	}
-	getPermissions(): string[] {
-		return this.permissions;
-	}
-	isSameRole(role: string): boolean {
-		return role === this.name;
+}
+export class Auth extends Role {
+	constructor() {
+		super(["update"], "auth");
 	}
 }
