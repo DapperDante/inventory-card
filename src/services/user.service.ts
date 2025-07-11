@@ -31,12 +31,12 @@ export class UserService {
 			throw ErrorFactory.createError("PermissionDeniedError", "Invalid password");
 		}
 		//Code of user not authenticated
-		if (response.error_code == 45000) {
-			return {
-				token: createTokenFactory("auth", { user_id: response.result.id }),
-				auth: false,
-			};
-		}
+		// if (response.error_code == 45000) {
+		// 	return {
+		// 		token: createTokenFactory("auth", { user_id: response.result.id }),
+		// 		auth: false,
+		// 	};
+		// }
 		return {
 			token: createTokenFactory("admin", { user_id: response.result.id }),
 			auth: true,
