@@ -16,7 +16,7 @@ export class UserService {
 			throw ErrorFactory.createError("SpError", "User already exists");
 		}
 		return {
-			token: createTokenFactory("admin", { user_id: response.id }),
+			token: createTokenFactory("admin", { user_id: response.result.id }),
 		};
 	}
 	async loginUser(username: string, password: string): Promise<{ token: string; auth: boolean }> {
