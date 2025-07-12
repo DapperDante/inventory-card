@@ -14,7 +14,7 @@ export class CompanyService {
           throw ErrorFactory.createError("SpError", response.message);
         const payloadToken = {
           user_id,
-          company_id: response.id,
+          company_id: response.result.id,
         };
         const token = createTokenFactory("admin", payloadToken);
         return {
