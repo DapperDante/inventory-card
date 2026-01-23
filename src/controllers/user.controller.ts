@@ -1,6 +1,7 @@
 import { Container } from "typedi";
 import { RouteHandler } from "../interfaces/route.interface";
 import { UserService } from "../services/user.service";
+import { redisComponent } from "../components/redis.component";
 
 export const signup: RouteHandler = async (req, res, next) => {
 	try {
@@ -37,3 +38,22 @@ export const auth: RouteHandler = async (req, res, next) => {
 		next(error);
 	}
 };
+export const logout: RouteHandler = async (req, res, next) => {
+	try{
+		const { token } = req;
+		const { exp } = req.user;
+		const ttl = exp - Math.floor(Date.now() / 1000);
+		await redisComponent.component.set(`blacklist:${token}`, "true", {
+			expiration: {
+				type: "EX",
+				value: ttl,
+			},
+		});
+		const payload = {
+			message: "Logged out successfully",
+		};
+		res.status(204).send(payload);
+	}catch(error){
+		next(error);
+	}
+}

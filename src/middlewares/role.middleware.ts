@@ -18,7 +18,7 @@ export const applyRole = (...role: RoleType[]): RouteHandler => {
 			if (!isValidRole) {
 				throw ErrorFactory.createError(
 					"PermissionDeniedError",
-					"You do not have permission to access this resource"
+					"You do not have permission to access this resource",
 				);
 			}
 			req.user = decoded;

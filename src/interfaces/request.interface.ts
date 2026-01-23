@@ -1,6 +1,7 @@
 import { Request } from "express";
 
-export interface RequestWithExtensions extends Request {
+export interface RequestWithParams extends Request {
   user?: any;
   data?: any;
+  token?: string;
 }

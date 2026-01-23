@@ -1,6 +1,8 @@
 export class ErrorFactory {
-	static createError(type: string, message: string) {
+	static createError(type: any, message: string, statusCode?: number): Error {
 		switch (type) {
+			case "InvalidationFieldsError":
+				return new InvalidationFieldsError(message);
 			case "PermissionDeniedError":
 				return new PermissionDeniedError(message);
 			case "NotFoundError":
@@ -9,9 +11,17 @@ export class ErrorFactory {
 				return new ViolationSystemError(message);
 			case "SpError":
 				return new SpError(message);
+			case "SecurityError":
+				return new SecurityError(message, statusCode!);
 			default:
 				return new Error(`Unknown error type: ${type}`);
 		}
+	}
+}
+export class InvalidationFieldsError extends Error {
+	constructor(message: any) {
+		super(message);
+		this.name = "ValidationError";
 	}
 }
 export class PermissionDeniedError extends Error {
@@ -36,5 +46,13 @@ export class SpError extends Error {
 	constructor(message: any) {
 		super(message);
 		this.name = "SpError";
+	}
+}
+export class SecurityError extends Error {
+	statusCode!: number;
+	constructor(message: any, statusCode: number) {
+		super(message);
+		this.statusCode = statusCode;
+		this.name = "SecurityError";
 	}
 }

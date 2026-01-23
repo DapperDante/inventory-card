@@ -1,4 +1,4 @@
-import { Sequelize } from "sequelize";
+import { Dialect, Sequelize } from "sequelize";
 import { dbEnv, appEnv } from "../config/env.config";
 
 const database = new Sequelize(
@@ -8,7 +8,7 @@ const database = new Sequelize(
   {
     host: dbEnv.DB_HOST,
     port: dbEnv.DB_PORT,
-    dialect: dbEnv.DB_DIALECT,
+    dialect: dbEnv.DB_DIALECT as Dialect,
     logging: appEnv.NODE_ENV === "development" ? console.log : false
   }
 );

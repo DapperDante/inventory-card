@@ -1,11 +1,12 @@
 import request from "supertest";
-import app from "../app";
+import { serverComponent } from "../components/server.component";
 import { faker } from "@faker-js/faker";
+import { User } from "../models/relation";
 import { afterAll, beforeAll, describe, expect, it } from "@jest/globals";
 
 describe("User API", () => {
 	let user: any;
-
+	const app = serverComponent.component
 	beforeAll(() => {
 		user = {
 			username: faker.internet.username(),
@@ -19,14 +20,14 @@ describe("User API", () => {
 	});
 	
 	it("should create a new user", async () => {
-		const res = await request(app).post("/api/user/signup").send(user);
+		const res = await request(app).post("/api/v1/user/signup").send(user);
 		expect(res.statusCode).toEqual(201);
 		expect(res.body).toHaveProperty("token");
 		expect(res.body.token).not.toBeNull();
 	});
 	
 	it("should login an existing user", async () => {
-		const res = await request(app).post("/api/user/login").send({
+		const res = await request(app).post("/api/v1/user/login").send({
 			username: user.username,
 			password: user.password,
 		});

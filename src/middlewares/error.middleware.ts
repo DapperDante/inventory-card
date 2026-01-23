@@ -1,8 +1,9 @@
 import { UniqueConstraintError, ValidationError } from "sequelize";
-import { PermissionDeniedError, NotFoundError, SpError } from "../classes/error.class";
+import { PermissionDeniedError, NotFoundError, SpError, SecurityError } from "../classes/error.class";
 import { RouteError } from "../interfaces/route.interface";
 import { TokenExpiredError } from "jsonwebtoken";
 import { ZodError } from "zod";
+import { loggerSystem } from "../config/logger.config";
 
 const handleTokenExpiredError: RouteError = (err, req, res, next) => {
 	console.log(err);
@@ -22,10 +23,16 @@ const handlePermissionDeniedError: RouteError = (err, req, res, next) => {
 	next(err);
 };
 
-const handleSyntaxError: RouteError = (err, req, res, next) => {
-	if (err instanceof SyntaxError) {
-		return res.status(400).json({
-			message: "Bad Request: Invalid JSON",
+
+const handleSecurityError: RouteError = (err, req, res, next) => {
+	if (err instanceof SecurityError){
+		return res.status(err.statusCode).json({
+			message: err.message || "Unauthorized: Security error",
+		});
+	}
+	if(err.type === "entity.too.large") {
+		return res.status(413).json({
+			message: err.message || "Payload Too Large",
 		});
 	}
 	next(err);
@@ -48,6 +55,7 @@ const handleUniqueConstraintError: RouteError = (err, req, res, next) => {
 	}
 	next(err);
 };
+
 const handleValidationError: RouteError = (err, req, res, next) => {
 	if (err instanceof ValidationError) {
 		return res.status(400).json({
@@ -56,6 +64,7 @@ const handleValidationError: RouteError = (err, req, res, next) => {
 	}
 	next(err);
 };
+
 const handleNotFoundError: RouteError = (err, req, res, next) => {
 	if(err instanceof NotFoundError){
 		return res.status(404).json({
@@ -64,6 +73,7 @@ const handleNotFoundError: RouteError = (err, req, res, next) => {
 	}
 	next(err);
 };
+
 const handleSpError: RouteError = (err, req, res, next) => {
 	if (err instanceof SpError) {
 		return res.status(500).json({
@@ -72,16 +82,18 @@ const handleSpError: RouteError = (err, req, res, next) => {
 	}
 	next(err);
 };
+
 const handleGenericError: RouteError = (err, req, res, next) => {
+	loggerSystem.error(`Unhandled error: ${err.message}`);
 	res.status(500).json({
 		message: "Internal Server Error",
 	});
 };
 
-export const errorHandler = [
+const errorHandler = [
 	handleTokenExpiredError,
 	handlePermissionDeniedError,
-	handleSyntaxError,
+	handleSecurityError,
 	handleInvalidationFieldsError,
 	handleUniqueConstraintError,
 	handleValidationError,
@@ -89,3 +101,5 @@ export const errorHandler = [
 	handleSpError,
 	handleGenericError,
 ];
+
+export default errorHandler;

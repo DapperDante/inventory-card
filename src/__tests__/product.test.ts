@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "../app";
+import { serverComponent } from "../components/server.component";
 import { describe, beforeAll, afterAll, it, expect } from "@jest/globals";
 import { Product } from "../models/relation";
 import { faker } from "@faker-js/faker";
@@ -9,7 +9,7 @@ describe("Product API", () => {
 	let product: any;
 	let token: string;
 	let idProduct: number;
-
+	const app = serverComponent.component;
 	beforeAll(async () => {
 		product = {
 			name: faker.commerce.productName(),
@@ -22,7 +22,7 @@ describe("Product API", () => {
 			email: faker.internet.email(),
 			password: faker.internet.password(),
 		};
-		const req = await request(app).post("/api/user/signup").send(user);
+		const req = await request(app).post("/api/v1/user/signup").send(user);
 		token = req.body.token;
 	});
 
@@ -33,7 +33,7 @@ describe("Product API", () => {
 
 	it("should create a new product", async () => {
 		const res = await request(app)
-			.post("/api/product/")
+			.post("/api/v1/product/")
 			.set("Authorization", `Bearer ${token}`)
 			.send(product);
 		expect(res.statusCode).toEqual(201);
@@ -42,7 +42,7 @@ describe("Product API", () => {
 	});
 
 	it("should get all products", async () => {
-		const res = await request(app).get("/api/product/all").set("Authorization", `Bearer ${token}`);
+		const res = await request(app).get("/api/v1/product/all").set("Authorization", `Bearer ${token}`);
 		expect(res.statusCode).toEqual(200);
 		expect(Array.isArray(res.body)).toBe(true);
 		expect(res.body.length).toBeGreaterThan(0);
@@ -51,7 +51,7 @@ describe("Product API", () => {
 	it("should update an existing product", async () => {
 		const updatedProduct = { ...product, name: "Updated Product" };
 		const res = await request(app)
-			.put(`/api/product/${idProduct}`)
+			.put(`/api/v1/product/${idProduct}`)
 			.set("Authorization", `Bearer ${token}`)
 			.send(updatedProduct);
 		expect(res.statusCode).toEqual(200);
@@ -59,7 +59,7 @@ describe("Product API", () => {
 
 	it("should delete an existing product", async () => {
 		const res = await request(app)
-			.delete(`/api/product/${idProduct}`)
+			.delete(`/api/v1/product/${idProduct}`)
 			.set("Authorization", `Bearer ${token}`);
 		expect(res.statusCode).toEqual(204);
 	});
